@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dota 2 Random Roulette</title>
+    <style>
+        body {
+            background-color: #1c1c1f;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background: #2b2b30;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #e54e4e;
+            margin-top: 0;
+        }
+        .hero-section {
+            margin: 25px 0;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 40px;
+        }
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        .item-slot {
+            background: #1c1c1f;
+            padding: 15px;
+            border: 2px dashed #4e4e54;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .item-slot.active {
+            border-style: solid;
+            border-color: #a370f7;
+            background: #251f30;
+        }
+        button {
+            background-color: #e54e4e;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #cf3c3c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Dota 2 Рандом Челлендж</h1>
+    <p>Нажми кнопку, чтобы получить случайного героя и сборку предметов!</p>
+    
+    <div class="hero-section" id="hero-display">Запустите рулетку...</div>
+    
+    <div class="items-grid">
+        <div class="item-slot" id="slot-1">Слот 1</div>
+        <div class="item-slot" id="slot-2">Слот 2</div>
+        <div class="item-slot" id="slot-3">Слот 3</div>
+        <div class="item-slot" id="slot-4">Слот 4</div>
+        <div class="item-slot" id="slot-5">Слот 5</div>
+        <div class="item-slot" id="slot-6">Слот 6</div>
+    </div>
+    
+    <button onclick="generateChallenge()">Сгенерировать!</button>
+</div>
+
+<script>
+    // База данных героев (можно расширять)
+    const heroes = [
+        "Pudge", "Invoker", "Anti-Mage", "Shadow Fiend", "Phantom Assassin", 
+        "Crystal Maiden", "Axe", "Juggernaut", "Rubick", "Techies", 
+        "Slark", "Sniper", "Legion Commander", "Wraith King", "Zeus"
+    ];
+
+    // База данных предметов (можно расширять)
+    const items = [
+        "Power Treads", "Phase Boots", "Blink Dagger", "Black King Bar (BKB)", 
+        "Aghanim's Scepter", "Daedalus", "Desolator", "Manta Style", 
+        "Scythe of Vyse", "Dagon 5", "Radiance", "Heart of Tarrasque", 
+        "Butterfly", "Satanic", "Refresher Orb", "Eul's Scepter", 
+        "Force Staff", "Bloodthorn", "Octarine Core", "Divine Rapier"
+    ];
+
+    function generateChallenge() {
+        // 1. Выбираем случайного героя
+        const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
+        document.getElementById('hero-display').innerText = "Ваш герой: " + randomHero;
+        
+        // 2. Выбираем 6 уникальных предметов
+        let shuffledItems = [...items]; // Копируем массив предметов
+        
+        // Перемешиваем массив предметов (Алгоритм Фишера-Йетса)
+        for (let i = shuffledItems.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledItems[i], shuffledItems[j]] = [shuffledItems[j], shuffledItems[i]];
+        }
+        
+        // 3. Выводим первые 6 предметов из перемешанного списка в слоты
+        for (let i = 1; i <= 6; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            slot.innerText = shuffledItems[i - 1];
+            slot.classList.add('active'); // Меняем стиль слота на «активный»
+        }
+    }
+</script>
+
+</body>
+</html>
