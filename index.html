@@ -3,55 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dota 2 Complete Autonomous Roulette</title>
+    <title>Dota 2 Roulette Fix</title>
     <style>
-        body {
-            background-color: #121316;
-            color: #e4e6eb;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            text-align: center;
-            background: #1c1e22;
-            padding: 30px;
-            border-radius: 16px;
-            max-width: 700px;
-            width: 100%;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            border: 1px solid #2d3139;
-        }
-        h1 { color: #ff4c4c; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; font-size: 26px; }
-        .hero-section { margin: 20px 0; min-height: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .hero-card-container { width: 220px; height: 125px; display: none; box-shadow: 0 8px 20px rgba(0,0,0,0.5); border-radius: 8px; overflow: hidden; border: 2px solid #3d424b; }
-        .hero-name { font-size: 26px; font-weight: bold; margin-top: 15px; letter-spacing: 1px; min-height: 35px; }
-        .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 25px 0; }
-        .item-slot { background: #151619; padding: 10px; border: 2px solid #2b2e35; border-radius: 8px; min-height: 110px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; }
-        .item-img-container { width: 90px; height: 64px; display: none; border-radius: 4px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.4); margin-bottom: 8px; }
-        .item-title { font-size: 13px; color: #b0b0c2; font-weight: 500; text-align: center; line-height: 1.2; padding: 0 2px; }
-        button {
-            background: linear-gradient(180deg, #ff5252 0%, #c62828 100%); color: white; border: none; padding: 16px 50px;
-            font-size: 18px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4); transition: background 0.2s, transform 0.1s;
-        }
-        button:hover { filter: brightness(1.1); }
-        button:active { transform: scale(0.98); }
+        body { background-color: #1a1b20; color: #ffffff; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .container { text-align: center; background: #22252c; padding: 30px; border-radius: 12px; max-width: 600px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: #ff4c4c; text-transform: uppercase; }
+        .error-log { color: #ff4c4c; font-weight: bold; margin: 10px 0; font-size: 14px; }
+        .hero-section { margin: 20px 0; min-height: 140px; }
+        .hero-box { width: 200px; height: 110px; margin: 0 auto 10px; display: none; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border-radius: 6px; text-shadow: 0 2px 4px #000; }
+        .hero-name { font-size: 24px; font-weight: bold; }
+        .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .item-slot { background: #15161a; padding: 10px; border: 2px solid #3a3d45; border-radius: 6px; min-height: 90px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .item-box { width: 80px; height: 55px; margin-bottom: 5px; display: none; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; }
+        .item-title { font-size: 13px; color: #b0b0c2; text-align: center; }
+        button { background: #ff4c4c; color: white; border: none; padding: 15px 40px; font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
+        button:hover { background: #ff3333; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Dota 2 Roulette</h1>
+    <div class="error-log" id="debug-error"></div>
     
     <div class="hero-section">
-        <div id="hero-card" class="hero-card-container"></div>
-        <div class="hero-name" id="hero-display">Готов к игре?</div>
+        <div id="hero-block" class="hero-box"></div>
+        <div class="hero-name" id="hero-display">Нажми на кнопку!</div>
     </div>
     
     <div class="items-grid">
@@ -67,58 +44,58 @@
 </div>
 
 <script>
-    // 100% ПОЛНЫЙ список всех 125 героев Dota 2 распределенных по атрибутам вручную
+    // Защищенная встроенная база данных
     const heroes = [
-        // СИЛА (str) - Красный стиль
-        { name: "Abaddon", attr: "str" }, { name: "Alchemist", attr: "str" }, { name: "Axe", attr: "str" }, { name: "Beastmaster", attr: "str" },
-        { name: "Brewmaster", attr: "str" }, { name: "Bristleback", attr: "str" }, { name: "Centaur Warrunner", attr: "str" }, { name: "Chaos Knight", attr: "str" },
-        { name: "Clockwerk", attr: "str" }, { name: "Dawnbreaker", attr: "str" }, { name: "Doom", attr: "str" }, { name: "Dragon Knight", attr: "str" },
-        { name: "Earth Spirit", attr: "str" }, { name: "Earthshaker", attr: "str" }, { name: "Elder Titan", attr: "str" }, { name: "Huskar", attr: "str" },
-        { name: "Io", attr: "str" }, { name: "Kunkka", attr: "str" }, { name: "Legion Commander", attr: "str" }, { name: "Lifestealer", attr: "str" },
-        { name: "Lycan", attr: "str" }, { name: "Mars", attr: "str" }, { name: "Night Stalker", attr: "str" }, { name: "Omniknight", attr: "str" },
-        { name: "Primal Beast", attr: "str" }, { name: "Pudge", attr: "str" }, { name: "Slardar", attr: "str" }, { name: "Spirit Breaker", attr: "str" },
-        { name: "Sven", attr: "str" }, { name: "Tidehunter", attr: "str" }, { name: "Timbersaw", attr: "str" }, { name: "Tinker", attr: "str" },
-        { name: "Tiny", attr: "str" }, { name: "Treant Protector", attr: "str" }, { name: "Tusk", attr: "str" }, { name: "Underlord", attr: "str" },
-        { name: "Undying", attr: "str" }, { name: "Wraith King", attr: "str" },
-        
-        // ЛОВКОСТЬ (agi) - Зеленый стиль
-        { name: "Anti-Mage", attr: "agi" }, { name: "Arc Warden", attr: "agi" }, { name: "Bloodseeker", attr: "agi" }, { name: "Bounty Hunter", attr: "agi" },
-        { name: "Clinkz", attr: "agi" }, { name: "Drow Ranger", attr: "agi" }, { name: "Ember Spirit", attr: "agi" }, { name: "Faceless Void", attr: "agi" },
-        { name: "Gyrocopter", attr: "agi" }, { name: "Hoodwink", attr: "agi" }, { name: "Juggernaut", attr: "agi" }, { name: "Luna", attr: "agi" },
-        { name: "Medusa", attr: "agi" }, { name: "Meepo", attr: "agi" }, { name: "Monkey King", attr: "agi" }, { name: "Morphling", attr: "agi" },
-        { name: "Naga Siren", attr: "agi" }, { name: "Phantom Assassin", attr: "agi" }, { name: "Phantom Lancer", attr: "agi" }, { name: "Razor", attr: "agi" },
-        { name: "Riki", attr: "agi" }, { name: "Shadow Fiend", attr: "agi" }, { name: "Slark", attr: "agi" }, { name: "Sniper", attr: "agi" },
-        { name: "Spectre", attr: "agi" }, { name: "Templar Assassin", attr: "agi" }, { name: "Terrorblade", attr: "agi" }, { name: "Troll Warlord", attr: "agi" },
-        { name: "Ursa", attr: "agi" }, { name: "Viper", attr: "agi" }, { name: "Weaver", attr: "agi" },
-        
-        // ИНТЕЛЛЕКТ (int) - Синий стиль
-        { name: "Ancient Apparition", attr: "int" }, { name: "Crystal Maiden", attr: "int" }, { name: "Death Prophet", attr: "int" }, { name: "Disruptor", attr: "int" },
-        { name: "Enchantress", attr: "int" }, { name: "Grimstroke", attr: "int" }, { name: "Jakiro", attr: "int" }, { name: "Keeper of the Light", attr: "int" },
-        { name: "Leshrac", attr: "int" }, { name: "Lich", attr: "int" }, { name: "Lina", attr: "int" }, { name: "Lion", attr: "int" },
-        { name: "Nature's Prophet", attr: "int" }, { name: "Necrophos", attr: "int" }, { name: "Oracle", attr: "int" }, { name: "Outworld Destroyer", attr: "int" },
-        { name: "Puck", attr: "int" }, { name: "Pugna", attr: "int" }, { name: "Queen of Pain", attr: "int" }, { name: "Rubick", attr: "int" },
-        { name: "Shadow Demon", attr: "int" }, { name: "Shadow Shaman", attr: "int" }, { name: "Silencer", attr: "int" }, { name: "Skywrath Mage", attr: "int" },
-        { name: "Storm Spirit", attr: "int" }, { name: "Techies", attr: "int" }, { name: "Warlock", attr: "int" }, { name: "Witch Doctor", attr: "int" },
-        { name: "Zeus", attr: "int" }, { name: "Muerta", attr: "int" },
-        
-        // УНИВЕРСАЛЬНЫЕ (uni) - Фиолетовый стиль
-        { name: "Abyssal Underlord", attr: "uni" }, { name: "Bane", attr: "uni" }, { name: "Batrider", attr: "uni" }, { name: "Broodmother", attr: "uni" },
-        { name: "Chen", attr: "uni" }, { name: "Dark Seer", attr: "uni" }, { name: "Dark Willow", attr: "uni" }, { name: "Dazzle", attr: "uni" },
-        { name: "Enigma", attr: "uni" }, { name: "Invoker", attr: "uni" }, { name: "Lone Druid", attr: "uni" }, { name: "Magnus", attr: "uni" },
-        { name: "Marci", attr: "uni" }, { name: "Mirana", attr: "uni" }, { name: "Nyx Assassin", attr: "uni" }, { name: "Pangolier", attr: "uni" },
-        { name: "Phoenix", attr: "uni" }, { name: "Sand King", attr: "uni" }, { name: "Snapfire", attr: "uni" }, { name: "Tazan", attr: "uni" },
-        { name: "Vengeful Spirit", attr: "uni" }, { name: "Venomancer", attr: "uni" }, { name: "Visage", attr: "uni" }, { name: "Void Spirit", attr: "uni" },
-        { name: "Windranger", attr: "uni" }, { name: "Winter Wyvern", attr: "uni" }, { name: "Kez", attr: "uni" }
+        { name: "Pudge", type: "#5c1d1d" }, { name: "Invoker", type: "#431d5c" }, { name: "Anti-Mage", type: "#1d5c2b" },
+        { name: "Shadow Fiend", type: "#1d5c2b" }, { name: "Juggernaut", type: "#1d5c2b" }, { name: "Axe", type: "#5c1d1d" },
+        { name: "Crystal Maiden", type: "#1d3d5c" }, { name: "Slark", type: "#1d5c2b" }, { name: "Sniper", type: "#1d5c2b" },
+        { name: "Zeus", type: "#1d3d5c" }, { name: "Sven", type: "#5c1d1d" }, { name: "Wraith King", type: "#5c1d1d" }
     ];
 
-    // 100% ПОЛНЫЙ список всех финальных полноценных предметов Dota 2 (без расходников и рецептов)
     const items = [
-        // Оружие и Урон
-        { name: "Divine Rapier", type: "damage" }, { name: "Daedalus", type: "damage" }, { name: "Desolator", type: "damage" }, { name: "Monkey King Bar", type: "damage" },
-        { name: "Radiance", type: "damage" }, { name: "Butterfly", type: "damage" }, { name: "Silver Edge", type: "damage" }, { name: "Bloodthorn", type: "damage" },
-        { name: "Nullifier", type: "damage" }, { name: "Maelstrom", type: "damage" }, { name: "Mjollnir", type: "damage" }, { name: "Gleipnir", type: "damage" },
-        { name: "Phylactery", type: "damage" }, { name: "Khanda", type: "damage" }, { name: "Revenant's Brooch", type: "damage" }, { name: "Battle Fury", type: "damage" },
-        
-        // Магия и Интеллект
-        { name: "Scythe of Vyse", type: "magic" }, { name: "Shiva's Guard", type: "magic" }, { name: "Octarine Core", type: "magic" }, { name: "Refresher Orb", type: "magic" },
-        { name: "Aghanim's Scepter", type: "magic" }, { name: "Aghanim's Shard", type: "magic" }, { name: "Dagon 5", type: "magic" }, { name: "Eul's Scepter", type: "magic" },
+        { name: "Blink Dagger", color: "#2ca887" }, { name: "Black King Bar", color: "#40454f" },
+        { name: "Daedalus", color: "#a82c2c" }, { name: "Desolator", color: "#a82c2c" },
+        { name: "Divine Rapier", color: "#bfa11f" }, { name: "Heart of Tarrasque", color: "#40454f" },
+        { name: "Manta Style", color: "#40454f" }, { name: "Aghanim's Scepter", color: "#2c72a8" },
+        { name: "Satanic", color: "#40454f" }, { name: "Shiva's Guard", color: "#2c72a8" },
+        { name: "Power Treads", color: "#5c4632" }, { name: "Phase Boots", color: "#5c4632" }
+    ];
+
+    window.onerror = function(message, source, lineno, colno, error) {
+        document.getElementById('debug-error').innerText = "Ошибка в коде: " + message + " (Строка: " + lineno + ")";
+        return false;
+    };
+
+    function generateChallenge() {
+        try {
+            document.getElementById('debug-error').innerText = ""; // Очищаем старые ошибки
+            
+            // 1. Выбор героя
+            const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
+            const heroBlock = document.getElementById('hero-block');
+            heroBlock.style.backgroundColor = randomHero.type;
+            heroBlock.style.display = 'flex';
+            heroBlock.innerText = randomHero.name.toUpperCase();
+            document.getElementById('hero-display').innerText = randomHero.name;
+
+            // 2. Перемешивание предметов
+            let shuffledItems = [...items].sort(() => 0.5 - Math.random());
+
+            // 3. Заполнение 6 слотов
+            for (let i = 1; i <= 6; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                const itemData = shuffledItems[i - 1];
+                
+                slot.innerHTML = `
+                    <div class="item-box" style="display:flex; background-color:${itemData.color};">DOTA 2</div>
+                    <div class="item-title">${itemData.name}</div>
+                `;
+            }
+        } catch (err) {
+            document.getElementById('debug-error').innerText = "Ошибка при генерации: " + err.message;
+        }
+    }
+</script>
+
+</body>
+</html>
