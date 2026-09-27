@@ -27,11 +27,11 @@
         }
         h1 { color: #ff4c4c; text-transform: uppercase; }
         .hero-section { margin: 20px 0; min-height: 160px; }
-        .hero-img { width: 200px; height: 114px; border-radius: 6px; display: none; margin: 0 auto 10px; border: 2px solid #444; }
+        .hero-img { width: 200px; height: 114px; border-radius: 6px; display: none; margin: 0 auto 10px; border: 2px solid #444; object-fit: cover; }
         .hero-name { font-size: 24px; font-weight: bold; }
         .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
         .item-slot { background: #15161a; padding: 10px; border: 2px solid #3a3d45; border-radius: 6px; min-height: 90px; }
-        .item-img { width: 85px; height: 60px; border-radius: 4px; display: none; margin: 0 auto 5px; }
+        .item-img { width: 85px; height: 60px; border-radius: 4px; display: none; margin: 0 auto 5px; object-fit: cover; }
         .item-title { font-size: 13px; color: #b0b0c2; }
         button {
             background: #ff4c4c; color: white; border: none; padding: 15px 40px;
@@ -60,26 +60,27 @@
 </div>
 
 <script>
+    // Обновленная база данных со стабильными ссылками на изображения
     const heroes = [
-        { name: "Pudge", img: "https://steamstatic.com" },
-        { name: "Invoker", img: "https://steamstatic.com" },
-        { name: "Anti-Mage", img: "https://steamstatic.com" },
-        { name: "Shadow Fiend", img: "https://steamstatic.com" },
-        { name: "Phantom Assassin", img: "https://steamstatic.com" },
-        { name: "Crystal Maiden", img: "https://steamstatic.com" },
-        { name: "Juggernaut", img: "https://steamstatic.com" },
-        { name: "Axe", img: "https://steamstatic.com" }
+        { name: "Pudge", img: "https://dota2.net" },
+        { name: "Invoker", img: "https://dota2.net" },
+        { name: "Anti-Mage", img: "https://dota2.net" },
+        { name: "Shadow Fiend", img: "https://dota2.net" },
+        { name: "Phantom Assassin", img: "https://dota2.net" },
+        { name: "Crystal Maiden", img: "https://dota2.net" },
+        { name: "Juggernaut", img: "https://dota2.net" },
+        { name: "Axe", img: "https://dota2.net" }
     ];
 
     const items = [
-        { name: "Blink Dagger", img: "https://steamstatic.com" },
-        { name: "Black King Bar", img: "https://steamstatic.com" },
-        { name: "Aghanim's Scepter", img: "https://steamstatic.com" },
-        { name: "Daedalus", img: "https://steamstatic.com" },
-        { name: "Desolator", img: "https://steamstatic.com" },
-        { name: "Manta Style", img: "https://steamstatic.com" },
-        { name: "Divine Rapier", img: "https://steamstatic.com" },
-        { name: "Heart of Tarrasque", img: "https://steamstatic.com" }
+        { name: "Blink Dagger", img: "https://dota2.net" },
+        { name: "Black King Bar", img: "https://dota2.net" },
+        { name: "Aghanim's Scepter", img: "https://dota2.net" },
+        { name: "Daedalus", img: "https://dota2.net" },
+        { name: "Desolator", img: "https://dota2.net" },
+        { name: "Manta Style", img: "https://dota2.net" },
+        { name: "Divine Rapier", img: "https://dota2.net" },
+        { name: "Heart of Tarrasque", img: "https://dota2.net" }
     ];
 
     function generateChallenge() {
@@ -97,7 +98,7 @@
             // Вывод предметов в 6 слотов
             for (let i = 1; i <= 6; i++) {
                 const slot = document.getElementById(`slot-${i}`);
-                const itemData = shuffledItems[i - 1] || shuffledItems[0]; 
+                const itemData = shuffledItems[i - 1]; 
                 slot.innerHTML = `
                     <img class="item-img" src="${itemData.img}" style="display:block;">
                     <div class="item-title">${itemData.name}</div>
