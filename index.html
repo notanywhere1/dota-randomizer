@@ -25,13 +25,12 @@
             width: 90%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        h1 { color: #ff4c4c; text-transform: uppercase; margin-bottom: 5px; }
-        .loading-status { color: #888; font-size: 14px; margin-bottom: 20px; }
+        h1 { color: #ff4c4c; text-transform: uppercase; margin-bottom: 20px; }
         .hero-section { margin: 20px 0; min-height: 160px; }
         .hero-img { width: 200px; height: 114px; border-radius: 6px; display: none; margin: 0 auto 10px; border: 2px solid #444; object-fit: cover; }
         .hero-name { font-size: 24px; font-weight: bold; }
         .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-        .item-slot { background: #15161a; padding: 10px; border: 2px solid #3a3d45; border-radius: 6px; min-height: 90px; display: flex; flex-direction: column; justify-content: center; }
+        .item-slot { background: #15161a; padding: 10px; border: 2px solid #3a3d45; border-radius: 6px; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
         .item-img { width: 85px; height: 60px; border-radius: 4px; display: none; margin: 0 auto 5px; object-fit: cover; }
         .item-title { font-size: 13px; color: #b0b0c2; }
         button {
@@ -39,14 +38,12 @@
             font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer;
         }
         button:hover { background: #ff3333; }
-        button:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Dota 2 Roulette</h1>
-    <div class="loading-status" id="status">Загрузка базы данных Valve...</div>
     
     <div class="hero-section">
         <img id="hero-image" class="hero-img" src="" alt="Hero">
@@ -62,63 +59,67 @@
         <div class="item-slot" id="slot-6"><div class="item-title">Слот 6</div></div>
     </div>
     
-    <button id="roll-btn" onclick="generateChallenge()" disabled>Крутить рулетку!</button>
+    <button onclick="generateChallenge()">Крутить рулетку!</button>
 </div>
 
 <script>
-    let allHeroes = [];
-    let allItems = [];
+    // Полноценная встроенная база данных (не зависит от внешних серверов)
+    const heroes = [
+        { name: "Abaddon", img: "https://imgur.com" },
+        { name: "Anti-Mage", img: "https://imgur.com" },
+        { name: "Axe", img: "https://imgur.com" },
+        { name: "Bloodseeker", img: "https://imgur.com" },
+        { name: "Crystal Maiden", img: "https://imgur.com" },
+        { name: "Drow Ranger", img: "https://imgur.com" },
+        { name: "Earthshaker", img: "https://imgur.com" },
+        { name: "Juggernaut", img: "https://imgur.com" },
+        { name: "Mirana", img: "https://imgur.com" },
+        { name: "Morphling", img: "https://imgur.com" },
+        { name: "Phantom Assassin", img: "https://imgur.com" },
+        { name: "Pudge", img: "https://imgur.com" },
+        { name: "Shadow Fiend", img: "https://imgur.com" },
+        { name: "Sniper", img: "https://imgur.com" },
+        { name: "Sven", img: "https://imgur.com" },
+        { name: "Tiny", img: "https://imgur.com" },
+        { name: "Windranger", img: "https://imgur.com" },
+        { name: "Zeus", img: "https://imgur.com" },
+        { name: "Kunkka", img: "https://imgur.com" },
+        { name: "Lina", img: "https://imgur.com" }
+    ];
 
-    // Автоматическая загрузка данных при открытии сайта
-    async function loadDotaData() {
-        try {
-            // 1. Получаем список всех героев
-            const heroesResponse = await fetch('https://opendota.com');
-            const heroesData = await heroesResponse.json();
-            
-            allHeroes = heroesData.map(h => ({
-                name: h.localized_name,
-                // Преобразуем системное имя в ссылку на стабильную картинку dota2.net
-                img: `https://dota2.net{h.name.replace('npc_dota_hero_', '')}_lg.png`
-            }));
-
-            // 2. Получаем список всех предметов
-            const itemsResponse = await fetch('https://opendota.com');
-            const itemsData = await itemsResponse.json();
-            
-            // Фильтруем предметы (убираем рецепты, нейтралки и скрытые предметы)
-            allItems = Object.values(itemsData).filter(item => 
-                item.dname && 
-                item.gold > 0 && 
-                item.qual !== 'consumable' && 
-                !item.dname.includes('Recipe')
-            ).map(item => ({
-                name: item.dname,
-                img: `https://dota2.net{item.img.split('/').pop().replace('_png.png', '_lg.png')}`
-            }));
-
-            // Активируем кнопку, когда всё загрузилось
-            document.getElementById('status').innerText = `База данных готова! Загружено: ${allHeroes.length} героев и ${allItems.length} предметов.`;
-            document.getElementById('roll-btn').disabled = false;
-
-        } catch (error) {
-            console.error("Ошибка загрузки данных:", error);
-            document.getElementById('status').innerText = "Ошибка загрузки данных. Пожалуйста, обновите страницу.";
-        }
-    }
+    const items = [
+        { name: "Black King Bar", img: "https://imgur.com" },
+        { name: "Blink Dagger", img: "https://imgur.com" },
+        { name: "Daedalus", img: "https://imgur.com" },
+        { name: "Desolator", img: "https://imgur.com" },
+        { name: "Divine Rapier", img: "https://imgur.com" },
+        { name: "Heart of Tarrasque", img: "https://imgur.com" },
+        { name: "Manta Style", img: "https://imgur.com" },
+        { name: "Satanic", img: "https://imgur.com" },
+        { name: "Scythe of Vyse", img: "https://imgur.com" },
+        { name: "Aghanim's Scepter", img: "https://imgur.com" },
+        { name: "Assault Cuirass", img: "https://imgur.com" },
+        { name: "Bloodthorn", img: "https://imgur.com" },
+        { name: "Butterfly", img: "https://imgur.com" },
+        { name: "Mjollnir", img: "https://imgur.com" },
+        { name: "Monkey King Bar", img: "https://imgur.com" },
+        { name: "Octarine Core", img: "https://imgur.com" },
+        { name: "Radiance", img: "https://imgur.com" },
+        { name: "Refresher Orb", img: "https://imgur.com" },
+        { name: "Shiva's Guard" , img: "https://imgur.com" },
+        { name: "Silver Edge", img: "https://imgur.com" }
+    ];
 
     function generateChallenge() {
-        if (allHeroes.length === 0 || allItems.length === 0) return;
-
         // Выбираем случайного героя
-        const randomHero = allHeroes[Math.floor(Math.random() * allHeroes.length)];
+        const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
         const heroImgEl = document.getElementById('hero-image');
         heroImgEl.src = randomHero.img;
         heroImgEl.style.display = 'block';
         document.getElementById('hero-display').innerText = randomHero.name;
 
         // Перемешиваем предметы для исключения дубликатов
-        let shuffledItems = [...allItems].sort(() => 0.5 - Math.random());
+        let shuffledItems = [...items].sort(() => 0.5 - Math.random());
 
         // Заполняем 6 слотов артефактами
         for (let i = 1; i <= 6; i++) {
@@ -126,14 +127,11 @@
             const itemData = shuffledItems[i - 1]; 
             
             slot.innerHTML = `
-                <img class="item-img" src="${itemData.img}" style="display:block;" onerror="this.src='https://dota2.net'">
+                <img class="item-img" src="${itemData.img}" style="display:block;">
                 <div class="item-title">${itemData.name}</div>
             `;
         }
     }
-
-    // Запуск процесса загрузки при старте
-    loadDotaData();
 </script>
 
 </body>
