@@ -5,130 +5,245 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dota 2 Random Roulette</title>
     <style>
+        /* Стильный геймерский фон с градиентом */
         body {
-            background-color: #1c1c1f;
+            background: radial-gradient(circle, #1a1b20 0%, #0d0e11 100%);
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
         }
+
         .container {
             text-align: center;
-            background: #2b2b30;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-            max-width: 600px;
+            background: rgba(30, 32, 38, 0.85);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
+            max-width: 650px;
             width: 90%;
+            border: 1px solid rgba(255, 76, 76, 0.1);
+            backdrop-filter: blur(10px);
         }
+
         h1 {
-            color: #e54e4e;
+            color: #ff4c4c;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             margin-top: 0;
+            text-shadow: 0 0 10px rgba(255, 76, 76, 0.4);
+            font-size: 28px;
         }
+
+        p {
+            color: #9e9eb0;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        /* Блок героя с анимацией */
         .hero-section {
-            margin: 25px 0;
-            font-size: 24px;
-            font-weight: bold;
-            min-height: 40px;
+            margin: 30px 0;
+            min-height: 190px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
+
+        .hero-img {
+            width: 200px;
+            height: 114px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            border: 2px solid #3d424b;
+            background-color: #111;
+            display: none; /* Появится при генерации */
+            object-fit: cover;
+        }
+
+        .hero-name {
+            font-size: 26px;
+            font-weight: bold;
+            margin-top: 15px;
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            min-height: 35px;
+        }
+
+        /* Красивая сетка предметов 3х2 */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 25px 0;
+            gap: 20px;
+            margin: 30px 0;
         }
+
         .item-slot {
-            background: #1c1c1f;
-            padding: 15px;
-            border: 2px dashed #4e4e54;
+            background: #15161a;
+            padding: 10px;
+            border: 2px dashed #3a3d45;
             border-radius: 8px;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            min-height: 105px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         .item-slot.active {
             border-style: solid;
-            border-color: #a370f7;
-            background: #251f30;
+            border-color: #ff4c4c;
+            background: #1e1518;
+            box-shadow: 0 5px 15px rgba(255, 76, 76, 0.15);
+            transform: scale(1.03);
         }
+
+        .item-img {
+            width: 85px;
+            height: 60px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+            display: none;
+        }
+
+        .item-title {
+            font-size: 12px;
+            color: #b0b0c2;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Кнопка с эффектом свечения */
         button {
-            background-color: #e54e4e;
+            background: linear-gradient(180deg, #ff5252 0%, #c62828 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 16px 50px;
             font-size: 18px;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
+            transition: all 0.2s ease;
         }
+
         button:hover {
-            background-color: #cf3c3c;
+            box-shadow: 0 6px 25px rgba(255, 82, 82, 0.6);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* Простая анимация вспышки при генерации */
+        @keyframes flash {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .animate {
+            animation: flash 0.4s ease-out forwards;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Dota 2 Рандом Челлендж</h1>
-    <p>Нажми кнопку, чтобы получить случайного героя и сборку предметов!</p>
+    <h1>Dota 2 Roulette Challenge</h1>
+    <p>Испытай свою удачу: нажми на кнопку и получи случайную сборку!</p>
     
-    <div class="hero-section" id="hero-display">Запустите рулетку...</div>
-    
-    <div class="items-grid">
-        <div class="item-slot" id="slot-1">Слот 1</div>
-        <div class="item-slot" id="slot-2">Слот 2</div>
-        <div class="item-slot" id="slot-3">Слот 3</div>
-        <div class="item-slot" id="slot-4">Слот 4</div>
-        <div class="item-slot" id="slot-5">Слот 5</div>
-        <div class="item-slot" id="slot-6">Слот 6</div>
+    <div class="hero-section">
+        <img id="hero-image" class="hero-img" src="" alt="Hero">
+        <div class="hero-name" id="hero-display">Готов к испытанию?</div>
     </div>
     
-    <button onclick="generateChallenge()">Сгенерировать!</button>
+    <div class="items-grid">
+        <div class="item-slot" id="slot-1"><div class="item-title">Слот 1</div></div>
+        <div class="item-slot" id="slot-2"><div class="item-title">Слот 2</div></div>
+        <div class="item-slot" id="slot-3"><div class="item-title">Слот 3</div></div>
+        <div class="item-slot" id="slot-4"><div class="item-title">Слот 4</div></div>
+        <div class="item-slot" id="slot-5"><div class="item-title">Слот 5</div></div>
+        <div class="item-slot" id="slot-6"><div class="item-title">Слот 6</div></div>
+    </div>
+    
+    <button onclick="generateChallenge()">Крутить рулетку!</button>
 </div>
 
 <script>
-    // База данных героев (можно расширять)
+    // Список героев со ссылками на картинки Steam/Valve
     const heroes = [
-        "Pudge", "Invoker", "Anti-Mage", "Shadow Fiend", "Phantom Assassin", 
-        "Crystal Maiden", "Axe", "Juggernaut", "Rubick", "Techies", 
-        "Slark", "Sniper", "Legion Commander", "Wraith King", "Zeus"
+        { name: "Pudge", img: "https://steamstatic.com" },
+        { name: "Invoker", img: "https://steamstatic.com" },
+        { name: "Anti-Mage", img: "https://steamstatic.com" },
+        { name: "Shadow Fiend", img: "https://steamstatic.com" },
+        { name: "Phantom Assassin", img: "https://steamstatic.com" },
+        { name: "Crystal Maiden", img: "https://steamstatic.com" },
+        { name: "Juggernaut", img: "https://steamstatic.com" },
+        { name: "Axe", img: "https://steamstatic.com" },
+        { name: "Slark", img: "https://steamstatic.com" },
+        { name: "Sniper", img: "https://steamstatic.com" }
     ];
 
-    // База данных предметов (можно расширять)
+    // Список предметов со ссылками на картинки Steam/Valve
     const items = [
-        "Power Treads", "Phase Boots", "Blink Dagger", "Black King Bar (BKB)", 
-        "Aghanim's Scepter", "Daedalus", "Desolator", "Manta Style", 
-        "Scythe of Vyse", "Dagon 5", "Radiance", "Heart of Tarrasque", 
-        "Butterfly", "Satanic", "Refresher Orb", "Eul's Scepter", 
-        "Force Staff", "Bloodthorn", "Octarine Core", "Divine Rapier"
+        { name: "Blink Dagger", img: "https://steamstatic.com" },
+        { name: "Black King Bar", img: "https://steamstatic.com" },
+        { name: "Aghanim's Scepter", img: "https://steamstatic.com" },
+        { name: "Daedalus", img: "https://steamstatic.com" },
+        { name: "Desolator", img: "https://steamstatic.com" },
+        { name: "Manta Style", img: "https://steamstatic.com" },
+        { name: "Dagon 5", img: "https://steamstatic.com" },
+        { name: "Divine Rapier", img: "https://steamstatic.com" },
+        { name: "Scythe of Vyse", img: "https://steamstatic.com" },
+        { name: "Heart of Tarrasque", img: "https://steamstatic.com" },
+        { name: "Satanic", img: "https://steamstatic.com" },
+        { name: "Bloodthorn", img: "https://steamstatic.com" }
     ];
 
     function generateChallenge() {
-        // 1. Выбираем случайного героя
+        // 1. Выбираем героя и запускаем анимацию
         const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
-        document.getElementById('hero-display').innerText = "Ваш герой: " + randomHero;
+        const heroImgEl = document.getElementById('hero-image');
+        const heroNameEl = document.getElementById('hero-display');
         
-        // 2. Выбираем 6 уникальных предметов
-        let shuffledItems = [...items]; // Копируем массив предметов
+        heroImgEl.src = randomHero.img;
+        heroImgEl.style.display = 'block';
+        heroNameEl.innerText = randomHero.name;
         
-        // Перемешиваем массив предметов (Алгоритм Фишера-Йетса)
+        // Сброс и перезапуск анимации героя
+        heroImgEl.classList.remove('animate');
+        void heroImgEl.offsetWidth; 
+        heroImgEl.classList.add('animate');
+
+        // 2. Перемешиваем предметы
+        let shuffledItems = [...items];
         for (let i = shuffledItems.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffledItems[i], shuffledItems[j]] = [shuffledItems[j], shuffledItems[i]];
         }
-        
-        // 3. Выводим первые 6 предметов из перемешанного списка в слоты
+
+        // 3. Выводим 6 предметов
         for (let i = 1; i <= 6; i++) {
             const slot = document.getElementById(`slot-${i}`);
-            slot.innerText = shuffledItems[i - 1];
-            slot.classList.add('active'); // Меняем стиль слота на «активный»
-        }
-    }
-</script>
-
-</body>
-</html>
+            const itemData = shuffledItems[i - 1];
+            
+            // Заполняем слот картинкой и текстом
+            slot.innerHTML = `
+                <img class="item-img" src="${itemData.img}" style="display:block;">
+                <div class="item-title">${itemData.name}</div>
+            `;
+            
+            slot.classList.add('active');
+            
+            // Сброс и перезапуск анимации слотов
