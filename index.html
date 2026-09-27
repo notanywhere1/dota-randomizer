@@ -5,169 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dota 2 Random Roulette</title>
     <style>
-        /* Стильный геймерский фон с градиентом */
         body {
-            background: radial-gradient(circle, #1a1b20 0%, #0d0e11 100%);
+            background-color: #1a1b20;
             color: #ffffff;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            overflow-x: hidden;
         }
-
         .container {
             text-align: center;
-            background: rgba(30, 32, 38, 0.85);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-            max-width: 650px;
+            background: #22252c;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px;
             width: 90%;
-            border: 1px solid rgba(255, 76, 76, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-
-        h1 {
-            color: #ff4c4c;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-top: 0;
-            text-shadow: 0 0 10px rgba(255, 76, 76, 0.4);
-            font-size: 28px;
-        }
-
-        p {
-            color: #9e9eb0;
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
-
-        /* Блок героя с анимацией */
-        .hero-section {
-            margin: 30px 0;
-            min-height: 190px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .hero-img {
-            width: 200px;
-            height: 114px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            border: 2px solid #3d424b;
-            background-color: #111;
-            display: none; /* Появится при генерации */
-            object-fit: cover;
-        }
-
-        .hero-name {
-            font-size: 26px;
-            font-weight: bold;
-            margin-top: 15px;
-            color: #fff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-            min-height: 35px;
-        }
-
-        /* Красивая сетка предметов 3х2 */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .item-slot {
-            background: #15161a;
-            padding: 10px;
-            border: 2px dashed #3a3d45;
-            border-radius: 8px;
-            min-height: 105px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .item-slot.active {
-            border-style: solid;
-            border-color: #ff4c4c;
-            background: #1e1518;
-            box-shadow: 0 5px 15px rgba(255, 76, 76, 0.15);
-            transform: scale(1.03);
-        }
-
-        .item-img {
-            width: 85px;
-            height: 60px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.5);
-            display: none;
-        }
-
-        .item-title {
-            font-size: 12px;
-            color: #b0b0c2;
-            text-align: center;
-            font-weight: 500;
-        }
-
-        /* Кнопка с эффектом свечения */
+        h1 { color: #ff4c4c; text-transform: uppercase; }
+        .hero-section { margin: 20px 0; min-height: 160px; }
+        .hero-img { width: 200px; height: 114px; border-radius: 6px; display: none; margin: 0 auto 10px; border: 2px solid #444; }
+        .hero-name { font-size: 24px; font-weight: bold; }
+        .items-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .item-slot { background: #15161a; padding: 10px; border: 2px solid #3a3d45; border-radius: 6px; min-height: 90px; }
+        .item-img { width: 85px; height: 60px; border-radius: 4px; display: none; margin: 0 auto 5px; }
+        .item-title { font-size: 13px; color: #b0b0c2; }
         button {
-            background: linear-gradient(180deg, #ff5252 0%, #c62828 100%);
-            color: white;
-            border: none;
-            padding: 16px 50px;
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(198, 40, 40, 0.4);
-            transition: all 0.2s ease;
+            background: #ff4c4c; color: white; border: none; padding: 15px 40px;
+            font-size: 18px; font-weight: bold; border-radius: 6px; cursor: pointer;
         }
-
-        button:hover {
-            box-shadow: 0 6px 25px rgba(255, 82, 82, 0.6);
-            transform: translateY(-2px);
-            filter: brightness(1.1);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        /* Простая анимация вспышки при генерации */
-        @keyframes flash {
-            0% { opacity: 0.3; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .animate {
-            animation: flash 0.4s ease-out forwards;
-        }
+        button:hover { background: #ff3333; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Dota 2 Roulette Challenge</h1>
-    <p>Испытай свою удачу: нажми на кнопку и получи случайную сборку!</p>
-    
+    <h1>Dota 2 Roulette</h1>
     <div class="hero-section">
         <img id="hero-image" class="hero-img" src="" alt="Hero">
-        <div class="hero-name" id="hero-display">Готов к испытанию?</div>
+        <div class="hero-name" id="hero-display">Нажми на кнопку!</div>
     </div>
-    
     <div class="items-grid">
         <div class="item-slot" id="slot-1"><div class="item-title">Слот 1</div></div>
         <div class="item-slot" id="slot-2"><div class="item-title">Слот 2</div></div>
@@ -176,12 +56,10 @@
         <div class="item-slot" id="slot-5"><div class="item-title">Слот 5</div></div>
         <div class="item-slot" id="slot-6"><div class="item-title">Слот 6</div></div>
     </div>
-    
     <button onclick="generateChallenge()">Крутить рулетку!</button>
 </div>
 
 <script>
-    // Список героев со ссылками на картинки Steam/Valve
     const heroes = [
         { name: "Pudge", img: "https://steamstatic.com" },
         { name: "Invoker", img: "https://steamstatic.com" },
@@ -190,12 +68,9 @@
         { name: "Phantom Assassin", img: "https://steamstatic.com" },
         { name: "Crystal Maiden", img: "https://steamstatic.com" },
         { name: "Juggernaut", img: "https://steamstatic.com" },
-        { name: "Axe", img: "https://steamstatic.com" },
-        { name: "Slark", img: "https://steamstatic.com" },
-        { name: "Sniper", img: "https://steamstatic.com" }
+        { name: "Axe", img: "https://steamstatic.com" }
     ];
 
-    // Список предметов со ссылками на картинки Steam/Valve
     const items = [
         { name: "Blink Dagger", img: "https://steamstatic.com" },
         { name: "Black King Bar", img: "https://steamstatic.com" },
@@ -203,47 +78,36 @@
         { name: "Daedalus", img: "https://steamstatic.com" },
         { name: "Desolator", img: "https://steamstatic.com" },
         { name: "Manta Style", img: "https://steamstatic.com" },
-        { name: "Dagon 5", img: "https://steamstatic.com" },
         { name: "Divine Rapier", img: "https://steamstatic.com" },
-        { name: "Scythe of Vyse", img: "https://steamstatic.com" },
-        { name: "Heart of Tarrasque", img: "https://steamstatic.com" },
-        { name: "Satanic", img: "https://steamstatic.com" },
-        { name: "Bloodthorn", img: "https://steamstatic.com" }
+        { name: "Heart of Tarrasque", img: "https://steamstatic.com" }
     ];
 
     function generateChallenge() {
-        // 1. Выбираем героя и запускаем анимацию
-        const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
-        const heroImgEl = document.getElementById('hero-image');
-        const heroNameEl = document.getElementById('hero-display');
-        
-        heroImgEl.src = randomHero.img;
-        heroImgEl.style.display = 'block';
-        heroNameEl.innerText = randomHero.name;
-        
-        // Сброс и перезапуск анимации героя
-        heroImgEl.classList.remove('animate');
-        void heroImgEl.offsetWidth; 
-        heroImgEl.classList.add('animate');
+        try {
+            // Выбор героя
+            const randomHero = heroes[Math.floor(Math.random() * heroes.length)];
+            const heroImgEl = document.getElementById('hero-image');
+            heroImgEl.src = randomHero.img;
+            heroImgEl.style.display = 'block';
+            document.getElementById('hero-display').innerText = randomHero.name;
 
-        // 2. Перемешиваем предметы
-        let shuffledItems = [...items];
-        for (let i = shuffledItems.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [shuffledItems[i], shuffledItems[j]] = [shuffledItems[j], shuffledItems[i]];
+            // Перемешивание предметов
+            let shuffledItems = [...items].sort(() => 0.5 - Math.random());
+
+            // Вывод предметов в 6 слотов
+            for (let i = 1; i <= 6; i++) {
+                const slot = document.getElementById(`slot-${i}`);
+                const itemData = shuffledItems[i - 1] || shuffledItems[0]; 
+                slot.innerHTML = `
+                    <img class="item-img" src="${itemData.img}" style="display:block;">
+                    <div class="item-title">${itemData.name}</div>
+                `;
+            }
+        } catch (error) {
+            console.error("Ошибка работы рулетки: ", error);
         }
+    }
+</script>
 
-        // 3. Выводим 6 предметов
-        for (let i = 1; i <= 6; i++) {
-            const slot = document.getElementById(`slot-${i}`);
-            const itemData = shuffledItems[i - 1];
-            
-            // Заполняем слот картинкой и текстом
-            slot.innerHTML = `
-                <img class="item-img" src="${itemData.img}" style="display:block;">
-                <div class="item-title">${itemData.name}</div>
-            `;
-            
-            slot.classList.add('active');
-            
-            // Сброс и перезапуск анимации слотов
+</body>
+</html>
